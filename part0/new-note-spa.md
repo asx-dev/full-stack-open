@@ -8,6 +8,5 @@ participant server
     server-->>browser: Status Code 201
     deactivate server
 
-    browser->>HTML: Render note added
     Note right of browser: The new note added is render on the page without making a full reload.
 ```
