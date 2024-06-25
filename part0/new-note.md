@@ -4,7 +4,7 @@ sequenceDiagram
     participant server
 
     browser-->server: Post Request https://studies.cs.helsinky.fi/exampleapp/new_note
-    activate serve
+    activate server
     server->>browser: Status Code 302
     deactivate server
 
