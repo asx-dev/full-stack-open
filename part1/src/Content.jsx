@@ -1,20 +1,10 @@
 import Part from "./Part";
 
-const Content = ({
-  part1,
-  exercises1,
-  part2,
-  exercises2,
-  part3,
-  exercises3,
-}) => {
-  return (
-    <>
-      <Part part={part1} exercises={exercises1} />
-      <Part part={part2} exercises={exercises2} />
-      <Part part={part3} exercises={exercises3} />
-    </>
-  );
+const Content = ({ parts }) => {
+  const items = parts.map((item) => {
+    return <Part key={item.name} name={item.name} exercises={item.exercise} />;
+  });
+  return <>{items}</>;
 };
 
 export default Content;
