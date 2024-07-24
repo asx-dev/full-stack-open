@@ -1,3 +1,5 @@
+import StatisticLine from "./StatisticLine";
+
 const Statistics = ({ good, neutral, bad }) => {
   const totalVotes = good + neutral + bad;
   const average = (totalVotes / 3).toFixed(2);
@@ -15,12 +17,16 @@ const Statistics = ({ good, neutral, bad }) => {
   return (
     <>
       <h1>Statistics</h1>
-      <p>Good: {good}</p>
-      <p>Neutral: {neutral}</p>
-      <p>Bad: {bad}</p>
-      <p>All: {totalVotes}</p>
-      <p>Average: {average}</p>
-      <p>Positive: {positiveFeedback > 0 ? positiveFeedback : 0} %</p>
+      <table>
+        <tbody>
+          <StatisticLine text="Good" value={good} />
+          <StatisticLine text="Neutral" value={neutral} />
+          <StatisticLine text="Bad" value={bad} />
+          <StatisticLine text="All" value={totalVotes} />
+          <StatisticLine text="Average" value={average} />
+          <StatisticLine text="Positive" value={positiveFeedback + " %"} />
+        </tbody>
+      </table>
     </>
   );
 };
