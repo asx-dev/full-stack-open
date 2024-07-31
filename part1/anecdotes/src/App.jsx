@@ -13,13 +13,19 @@ const App = () => {
   ];
   const [selected, setSelected] = useState(0);
   const [votes, setVotes] = useState(Array(8).fill(0));
+  const [favorite, setFavorite] = useState(0);
   const changeAnecdote = () => {
     setSelected(Math.floor(Math.random() * 8));
   };
   const voteForAnecdote = () => {
-    setVotes(
-      votes.map((vote, index) => (index === selected ? vote + 1 : vote))
+    const newVotes = votes.map((vote, index) =>
+      index === selected ? vote + 1 : vote
     );
+    setVotes(newVotes);
+    const newFavorite = newVotes.findIndex(
+      (element) => element === Math.max(...newVotes)
+    );
+    setFavorite(newFavorite);
   };
   return (
     <div>
@@ -29,6 +35,8 @@ const App = () => {
       <button onClick={voteForAnecdote}>vote</button>
       <button onClick={changeAnecdote}>next anecdote</button>
       <h1>Anecdote with most votes</h1>
+      {anecdotes[favorite]}
+      <p>Has {votes[favorite]} votes</p>
     </div>
   );
 };
