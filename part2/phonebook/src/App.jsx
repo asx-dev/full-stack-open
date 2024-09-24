@@ -13,8 +13,9 @@ const App = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const persons = await noteService.getAll();
-        setPersons(persons);
+        const data = await noteService.getAll();
+        setPersons(data);
+        console.log();
       } catch (error) {
         console.error("Failed to fetch data", error);
         throw error;
@@ -74,13 +75,12 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      {/* Filter Form */}
       <Filter
         filterHandler={filterHandler}
         searchValue={searchValue}
         searchValueHandler={searchValueHandler}
       />
-      {/* Add Contacts Form */}
+
       <PersonForm
         formHandler={formHandler}
         newName={newName}
@@ -90,8 +90,7 @@ const App = () => {
       />
 
       <h2>Numbers</h2>
-      {/* List of peple */}
-      <Persons persons={persons} />
+      <Persons persons={persons} setPersons={setPersons} />
     </div>
   );
 };

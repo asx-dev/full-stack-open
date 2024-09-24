@@ -22,4 +22,14 @@ const createNote = (note) => {
     });
 };
 
-export default { getAll, createNote };
+const deleteNote = (id) => {
+  const request = axios.delete(`${API_URL}/${id}`);
+  return request
+    .then((response) => response.data)
+    .catch((error) => {
+      console.error("Error deleting note:", error);
+      throw error;
+    });
+};
+
+export default { getAll, createNote, deleteNote };
