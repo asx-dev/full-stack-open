@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
+import noteService from "./services/notes";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -11,9 +11,16 @@ const App = () => {
   const [searchValue, setSearchValue] = useState("");
 
   useEffect(() => {
-    axios
-      .get("http://localhost:3001/persons")
-      .then((response) => setPersons(response.data));
+    const fetchData = async () => {
+      try {
+        const persons = await noteService.getAll();
+        setPersons(persons);
+      } catch (error) {
+        console.error("Failed to fetch data", error);
+        throw error;
+      }
+    };
+    fetchData();
   }, []);
 
   const nameHandler = (e) => {
@@ -34,7 +41,21 @@ const App = () => {
     if (persons.some((person) => person.name === newName))
       return window.alert(`${newName} is already added to the phonebook`);
 
-    setPersons(persons.concat({ name: newName, number: newNumber }));
+    // Send users to the server
+    const createUser = async () => {
+      try {
+        const data = { name: newName, number: newNumber };
+        const newUser = await noteService.createNote(data);
+        setPersons(persons.concat(newUser));
+      } catch (error) {
+        console.log("Failed to create user", error);
+        throw error;
+      }
+    };
+
+    createUser();
+
+    // Reset form
     setNewName("");
     setNewNumber("");
   };
