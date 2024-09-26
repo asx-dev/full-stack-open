@@ -32,4 +32,14 @@ const deleteNote = (id) => {
     });
 };
 
-export default { getAll, createNote, deleteNote };
+const updateNote = (id, updatedNote) => {
+  const request = axios.put(`${API_URL}/${id}`, updatedNote);
+  return request
+    .then((response) => response.data)
+    .catch((error) => {
+      console.error("Error updating note:", error);
+      throw error;
+    });
+};
+
+export default { getAll, createNote, deleteNote, updateNote };

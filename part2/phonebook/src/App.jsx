@@ -15,7 +15,6 @@ const App = () => {
       try {
         const data = await noteService.getAll();
         setPersons(data);
-        console.log();
       } catch (error) {
         console.error("Failed to fetch data", error);
         throw error;
@@ -38,23 +37,40 @@ const App = () => {
 
   const formHandler = (e) => {
     e.preventDefault();
+    const data = { name: newName, number: newNumber };
 
-    if (persons.some((person) => person.name === newName))
-      return window.alert(`${newName} is already added to the phonebook`);
+    if (persons.some((person) => person.name === newName)) {
+      window.alert(
+        `${newName} is already added to the phonebook, replace the old number with the new one?`
+      );
 
-    // Send users to the server
-    const createUser = async () => {
-      try {
-        const data = { name: newName, number: newNumber };
-        const newUser = await noteService.createNote(data);
-        setPersons(persons.concat(newUser));
-      } catch (error) {
-        console.log("Failed to create user", error);
-        throw error;
-      }
-    };
+      const person = persons.find((person) => person.name === newName);
 
-    createUser();
+      const updateUser = async (id) => {
+        try {
+          const updatedUser = await noteService.updateNote(id, data);
+          setPersons(
+            persons.map((person) => (person.id === id ? updatedUser : person))
+          );
+        } catch (error) {
+          console.log("Error updating", error);
+        }
+      };
+
+      updateUser(person.id, data);
+    } else {
+      // Send users to the servernam
+      const createUser = async () => {
+        try {
+          const newUser = await noteService.createNote(data);
+          setPersons(persons.concat(newUser));
+        } catch (error) {
+          console.log("Failed to create user", error);
+        }
+      };
+
+      createUser();
+    }
 
     // Reset form
     setNewName("");
