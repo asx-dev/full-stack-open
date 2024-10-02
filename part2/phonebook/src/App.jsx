@@ -3,12 +3,14 @@ import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
 import noteService from "./services/notes";
+import Success from "./components/Success";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [searchValue, setSearchValue] = useState("");
+  const [message, setMessage] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -57,9 +59,11 @@ const App = () => {
         }
       };
 
+      setMessage(`Updated ${newName}'s number`);
+
       updateUser(person.id, data);
     } else {
-      // Send users to the servernam
+      // Send users to the server
       const createUser = async () => {
         try {
           const newUser = await noteService.createNote(data);
@@ -68,6 +72,8 @@ const App = () => {
           console.log("Failed to create user", error);
         }
       };
+
+      setMessage(`Added ${newName} to the phonebook`);
 
       createUser();
     }
@@ -91,6 +97,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Success message={message} />
       <Filter
         filterHandler={filterHandler}
         searchValue={searchValue}
