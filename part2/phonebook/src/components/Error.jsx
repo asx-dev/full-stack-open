@@ -1,6 +1,6 @@
-const Success = ({ message }) => {
+const Error = ({ message }) => {
   const style = {
-    backgroundColor: "green",
+    backgroundColor: "red",
     color: "white",
     padding: "10px",
     borderRadius: "5px",
@@ -9,4 +9,4 @@ const Success = ({ message }) => {
   return <div style={style}>{message}</div>;
 };
 
-export default Success;
+export default Error;

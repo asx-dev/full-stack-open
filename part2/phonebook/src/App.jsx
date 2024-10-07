@@ -4,6 +4,7 @@ import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
 import noteService from "./services/notes";
 import Success from "./components/Success";
+import Error from "./components/Error";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -11,6 +12,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState("");
   const [searchValue, setSearchValue] = useState("");
   const [message, setMessage] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -54,13 +56,20 @@ const App = () => {
           setPersons(
             persons.map((person) => (person.id === id ? updatedUser : person))
           );
+          setMessage(`Updated ${newName}'s number`);
+          setTimeout(() => {
+            setMessage(null);
+          }, 5000);
         } catch (error) {
-          console.log("Error updating", error);
+          console.error(error);
+          setErrorMessage(
+            `The information of ${newName} has already been removed from the server.`
+          );
+          setTimeout(() => {
+            setErrorMessage(null);
+          }, 5000);
         }
       };
-
-      setMessage(`Updated ${newName}'s number`);
-
       updateUser(person.id, data);
     } else {
       // Send users to the server
@@ -68,12 +77,18 @@ const App = () => {
         try {
           const newUser = await noteService.createNote(data);
           setPersons(persons.concat(newUser));
+          setMessage(`Added ${newName} to the phonebook`);
+          setTimeout(() => {
+            setMessage(null);
+          }, 5000);
         } catch (error) {
-          console.log("Failed to create user", error);
+          console.error(error);
+          setErrorMessage("Failed to create user");
+          setTimeout(() => {
+            setErrorMessage(null);
+          }, 5000);
         }
       };
-
-      setMessage(`Added ${newName} to the phonebook`);
 
       createUser();
     }
@@ -97,7 +112,9 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Success message={message} />
+      {message && <Success message={message} />}
+
+      {errorMessage && <Error message={errorMessage} />}
       <Filter
         filterHandler={filterHandler}
         searchValue={searchValue}
