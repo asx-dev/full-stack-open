@@ -1,28 +1,58 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 function App() {
   const [country, setCountry] = useState("");
   const [countries, setCountries] = useState([]);
-  const API_URL = "https://studies.cs.helsinki.fi/restcountries/api/name/";
+  const API_URL = "https://studies.cs.helsinki.fi/restcountries/api/all";
 
-  const fetchCountryData = async (e) => {
+  const countrySearch = (e) => {
     e.preventDefault();
-    try {
-      const response = await fetch(`${API_URL}${country}`);
-      const data = await response.json();
-      setCountries([data]);
-    } catch (error) {
-      console.error("Failed to fetch data", error);
-    }
   };
 
   const inputHandler = (e) => {
     setCountry(e.target.value);
   };
 
+  useEffect(() => {
+    let mounted = true;
+
+    const fetchCountryData = async () => {
+      try {
+        const response = await fetch(`${API_URL}`);
+        const data = await response.json();
+        if (mounted) {
+          console.log(data);
+          const countriesMap = new Map(
+            data.map((country) => [
+              country.name.common,
+              {
+                name: country.name.common,
+                capital: country.capital[0],
+                area: country.area,
+                languages: Object.values(country.languages),
+                flag: country.flag,
+              },
+            ])
+          );
+          setCountries(countriesMap);
+        }
+      } catch (error) {
+        if (mounted) {
+          console.error("Failed to fetch data", error);
+        }
+      }
+    };
+
+    fetchCountryData();
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
   return (
     <>
       <h1>Countries</h1>
-      <form onSubmit={fetchCountryData} method="get">
+      <form method="get">
         Find country:{" "}
         <input type="text" value={country} onChange={inputHandler} />
         <input type="submit" value="submit" />
@@ -40,6 +70,7 @@ function App() {
           return <li key={country.name.common}>{country.name.common}</li>;
         })}
 
+      {/* Exact Match  */}
       {countries.length === 1 && countries[0].name && (
         <div>
           <h2>{countries[0].name.common}</h2>
