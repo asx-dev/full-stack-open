@@ -3,9 +3,15 @@ function App() {
   const [country, setCountry] = useState("");
   const [countries, setCountries] = useState([]);
   const API_URL = "https://studies.cs.helsinki.fi/restcountries/api/all";
+  const [filteredCountries, setFilteredCountries] = useState([]);
 
   const countrySearch = (e) => {
     e.preventDefault();
+
+    const regex = new RegExp(country, "i");
+    setFilteredCountries(
+      countries.filter((country) => regex.test(country.name.common))
+    );
   };
 
   const inputHandler = (e) => {
@@ -20,20 +26,7 @@ function App() {
         const response = await fetch(`${API_URL}`);
         const data = await response.json();
         if (mounted) {
-          console.log(data);
-          const countriesMap = new Map(
-            data.map((country) => [
-              country.name.common,
-              {
-                name: country.name.common,
-                capital: country.capital[0],
-                area: country.area,
-                languages: Object.values(country.languages),
-                flag: country.flag,
-              },
-            ])
-          );
-          setCountries(countriesMap);
+          setCountries(data);
         }
       } catch (error) {
         if (mounted) {
@@ -52,35 +45,36 @@ function App() {
   return (
     <>
       <h1>Countries</h1>
-      <form method="get">
+      <form onSubmit={countrySearch} method="get">
         Find country:{" "}
         <input type="text" value={country} onChange={inputHandler} />
         <input type="submit" value="submit" />
       </form>
 
       {/* Many matches */}
-      {countries.length > 10 && (
-        <p>Too many matches, please be more specific.</p>
+      {filteredCountries.length > 10 && (
+        <p>Too many matches, specify another filter.</p>
+      )}
+      {/*Between 1 & 10 */}
+      {filteredCountries.length > 1 && filteredCountries.length < 10 && (
+        <ul>
+          {filteredCountries.map((country) => (
+            <li key={country.name.common}>{country.name.common}</li>
+          ))}
+        </ul>
       )}
 
-      {/*Between 1 & 10 */}
-      {countries.length > 1 &&
-        countries.length < 10 &&
-        countries.map((country) => {
-          return <li key={country.name.common}>{country.name.common}</li>;
-        })}
-
       {/* Exact Match  */}
-      {countries.length === 1 && countries[0].name && (
+      {filteredCountries.length === 1 && (
         <div>
-          <h2>{countries[0].name.common}</h2>
-          <p>Capital: {countries[0].capital}</p>
-          <p>Area: {countries[0].area}</p>
-          <h3>Languages</h3>
-          {Object.entries(countries[0].languages).map((language) => {
-            return <li key={language[0]}>{language[1]}</li>;
-          })}
-          <span style={{ fontSize: "250px" }}>{countries[0].flag}</span>
+          <h1>{filteredCountries[0].name.common}</h1>
+          <p>Capital: {filteredCountries[0].capital}</p>
+          <p>Area:{filteredCountries[0].area}</p>
+          <p>
+            Languages:{" "}
+            {Object.values(filteredCountries[0].languages).join(", ")}
+          </p>
+          <img src={filteredCountries[0].flags.png} />
         </div>
       )}
     </>
