@@ -59,11 +59,15 @@ function App() {
       {filteredCountries.length > 1 && filteredCountries.length < 10 && (
         <ul>
           {filteredCountries.map((country) => (
-            <li key={country.name.common}>{country.name.common}</li>
+            <li key={country.name.common}>
+              {country.name.common}
+              <button onClick={() => setFilteredCountries([country])}>
+                show
+              </button>
+            </li>
           ))}
         </ul>
       )}
-
       {/* Exact Match  */}
       {filteredCountries.length === 1 && (
         <div>
