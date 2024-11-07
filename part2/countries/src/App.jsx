@@ -2,8 +2,10 @@ import { useState, useEffect } from "react";
 function App() {
   const [country, setCountry] = useState("");
   const [countries, setCountries] = useState([]);
+  const [weatherData, setWeatherData] = useState("");
   const API_URL = "https://studies.cs.helsinki.fi/restcountries/api/all";
   const [filteredCountries, setFilteredCountries] = useState([]);
+  const apiKey = import.meta.env.VITE_API_KEY;
 
   const countrySearch = (e) => {
     e.preventDefault();
@@ -16,6 +18,19 @@ function App() {
 
   const inputHandler = (e) => {
     setCountry(e.target.value);
+  };
+
+  const fetchWeatherData = async (name) => {
+    try {
+      const response = await fetch(
+        `https://api.openweathermap.org/data/2.5/weather?q=${name}&appid=${apiKey}`
+      );
+      const data = await response.json();
+      setWeatherData(data);
+      console.log("Wheather information", data);
+    } catch (error) {
+      console.error("Failed to fetch weather data", error);
+    }
   };
 
   useEffect(() => {
@@ -41,6 +56,12 @@ function App() {
       mounted = false;
     };
   }, []);
+
+  useEffect(() => {
+    if (filteredCountries.length === 1) {
+      fetchWeatherData(filteredCountries[0].name.common);
+    }
+  }, [filteredCountries]);
 
   return (
     <>
@@ -79,6 +100,9 @@ function App() {
             {Object.values(filteredCountries[0].languages).join(", ")}
           </p>
           <img src={filteredCountries[0].flags.png} />
+          <h1>Weather in {filteredCountries[0].name.common}</h1>
+          <p>Temperature {weatherData.main.temp}ºC</p>
+          <p>Wind {weatherData.wind.speed} m/s</p>
         </div>
       )}
     </>
