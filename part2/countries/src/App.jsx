@@ -14,6 +14,10 @@ function App() {
     setFilteredCountries(
       countries.filter((country) => regex.test(country.name.common))
     );
+
+    // Clear the input fields
+    setCountry("");
+    setWeatherData("");
   };
 
   const inputHandler = (e) => {
@@ -23,11 +27,10 @@ function App() {
   const fetchWeatherData = async (name) => {
     try {
       const response = await fetch(
-        `https://api.openweathermap.org/data/2.5/weather?q=${name}&appid=${apiKey}`
+        `https://api.openweathermap.org/data/2.5/weather?q=${name}&units=metric&appid=${apiKey}`
       );
       const data = await response.json();
       setWeatherData(data);
-      console.log("Wheather information", data);
     } catch (error) {
       console.error("Failed to fetch weather data", error);
     }
@@ -58,9 +61,8 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (filteredCountries.length === 1) {
+    if (filteredCountries.length === 1)
       fetchWeatherData(filteredCountries[0].name.common);
-    }
   }, [filteredCountries]);
 
   return (
@@ -100,9 +102,13 @@ function App() {
             {Object.values(filteredCountries[0].languages).join(", ")}
           </p>
           <img src={filteredCountries[0].flags.png} />
-          <h1>Weather in {filteredCountries[0].name.common}</h1>
-          <p>Temperature {weatherData.main.temp}ºC</p>
-          <p>Wind {weatherData.wind.speed} m/s</p>
+          {weatherData && (
+            <div>
+              <h1>Weather in {filteredCountries[0].name.common}</h1>
+              <p>Temperature {weatherData.main.temp.toFixed(2)}ºC</p>
+              <p>Wind {weatherData.wind.speed} m/s</p>
+            </div>
+          )}
         </div>
       )}
     </>
