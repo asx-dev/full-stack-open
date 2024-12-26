@@ -8,9 +8,10 @@ const PersonForm = ({
   return (
     <form onSubmit={formHandler}>
       <div>
-        Name: <input value={newName} onChange={nameHandler} />
+        Name: <input value={newName} onChange={nameHandler} name="name" />
         <br />
-        Number: <input value={newNumber} onChange={numberHandler} />
+        Number:{" "}
+        <input value={newNumber} onChange={numberHandler} name="number" />
       </div>
       <div>
         <button type="submit">add</button>

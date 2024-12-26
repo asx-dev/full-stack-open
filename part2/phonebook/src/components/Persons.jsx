@@ -4,8 +4,8 @@ const Persons = ({ persons, setPersons }) => {
     try {
       const target = persons.find((person) => person.id === id);
       if (window.confirm(`Delete ${target.name}?`)) {
-        const deletePerson = await noteService.deleteNote(id);
-        setPersons(persons.filter((person) => person.id !== deletePerson.id));
+        const contacts = await noteService.deleteNote(id);
+        setPersons(contacts);
       }
     } catch (error) {
       console.log("Error deleting person", error);
