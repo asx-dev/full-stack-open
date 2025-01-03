@@ -61,10 +61,7 @@ const App = () => {
             setMessage(null);
           }, 5000);
         } catch (error) {
-          console.error(error);
-          setErrorMessage(
-            `The information of ${newName} has already been removed from the server.`
-          );
+          setErrorMessage(error);
           setTimeout(() => {
             setErrorMessage(null);
           }, 5000);
@@ -82,8 +79,7 @@ const App = () => {
             setMessage(null);
           }, 5000);
         } catch (error) {
-          console.error(error);
-          setErrorMessage("Failed to create user");
+          setErrorMessage(error);
           setTimeout(() => {
             setErrorMessage(null);
           }, 5000);

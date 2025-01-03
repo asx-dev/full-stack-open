@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "/api/persons";
+const API_URL = "https://phonebook-backend-8ahk.onrender.com/api/persons";
 
 const getAll = () => {
   const request = axios.get(API_URL);
@@ -17,8 +17,7 @@ const createNote = (note) => {
   return request
     .then((response) => response.data)
     .catch((error) => {
-      console.error("Error creating note:", error);
-      throw error;
+      throw error.response.data.message;
     });
 };
 
@@ -37,8 +36,7 @@ const updateNote = (id, updatedNote) => {
   return request
     .then((response) => response.data)
     .catch((error) => {
-      console.error("Error updating note:", error);
-      throw error;
+      throw error.response.data.message;
     });
 };
 
