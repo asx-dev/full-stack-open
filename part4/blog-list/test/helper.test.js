@@ -71,3 +71,10 @@ describe("favorite blog", () => {
     assert.strictEqual(result.title, "Canonical string reduction");
   });
 });
+
+describe("most blogs", () => {
+  test("Return the author with the most blogs", () => {
+    const result = listHelper.mostBlogs(blogs);
+    assert.strictEqual(result.name, "Robert C. Martin");
+  });
+});
