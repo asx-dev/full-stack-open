@@ -17,21 +17,27 @@ const favoriteBlog = (blogs) => {
       )
     : null;
 };
-// TODO: Solve the problem of use tha map to save the authors and then the result
+
 const mostBlogs = (blogs) => {
-  const authors = new Map();
+  if (blogs.length === 0) return null;
+
+  const authorBlogCount = new Map();
   blogs.forEach((blog) => {
-    authors.has(blog.author)
-      ? authors.set(blog.author, authors.get(blog.author) + 1)
-      : authors.set(blog.author, 1);
+    authorBlogCount.set(
+      blog.author,
+      (authorBlogCount.get(blog.author) || 0) + 1
+    );
   });
-  // const author = Array.from(authors.entries()).reduce(
-  //   (top, current) => (authors.get(top) > authors.get(current) ? top : current),
-  //   authors[0]
-  // );
-  // console.log("Something is happening");
-  // console.log(author);
-  console.log(Object.entries(authors));
+
+  const topAuthor = { author: null, blogs: 0 };
+
+  for (const [author, count] of authorBlogCount) {
+    if (count > topAuthor.blogs) {
+      topAuthor.author = author;
+      topAuthor.blogs = count;
+    }
+  }
+  return topAuthor;
 };
 
 module.exports = { dummy, totalLikes, favoriteBlog, mostBlogs };

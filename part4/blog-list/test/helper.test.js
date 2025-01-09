@@ -75,6 +75,6 @@ describe("favorite blog", () => {
 describe("most blogs", () => {
   test("Return the author with the most blogs", () => {
     const result = listHelper.mostBlogs(blogs);
-    assert.strictEqual(result.name, "Robert C. Martin");
+    assert.strictEqual(result.author, "Robert C. Martin");
   });
 });
