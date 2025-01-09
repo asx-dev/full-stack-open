@@ -78,3 +78,10 @@ describe("most blogs", () => {
     assert.strictEqual(result.author, "Robert C. Martin");
   });
 });
+
+describe("most likes", () => {
+  test("Return the author with the most likes", () => {
+    const result = listHelper.mostLikes(blogs);
+    assert.strictEqual(result.author, "Edsger W. Dijkstra");
+  });
+});

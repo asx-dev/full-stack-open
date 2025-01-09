@@ -40,4 +40,14 @@ const mostBlogs = (blogs) => {
   return topAuthor;
 };
 
-module.exports = { dummy, totalLikes, favoriteBlog, mostBlogs };
+const mostLikes = (blogs) => {
+  if (blogs.length === 0) return null;
+
+  let topAuthor = blogs.reduce((top, current) =>
+    top.likes > current.likes ? top : current
+  );
+
+  return { author: topAuthor.author, likes: topAuthor.likes };
+};
+
+module.exports = { dummy, totalLikes, favoriteBlog, mostBlogs, mostLikes };
