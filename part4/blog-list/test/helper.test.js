@@ -1,6 +1,10 @@
-const { describe, test } = require("node:test");
+const { describe, test, after } = require("node:test");
 const assert = require("node:assert");
 const listHelper = require("../utils/list_helper");
+const mongoose = require("mongoose");
+const supertest = require("supertest");
+const app = require("../app");
+const api = supertest(app);
 
 const blogs = [
   {
@@ -83,5 +87,17 @@ describe("most likes", () => {
   test("Return the author with the most likes", () => {
     const result = listHelper.mostLikes(blogs);
     assert.strictEqual(result.author, "Edsger W. Dijkstra");
+  });
+});
+
+describe("api test", () => {
+  test("HTTP GET Request /api/blogs", async () => {
+    await api
+      .get("/api/blogs")
+      .expect(200)
+      .expect("Content-Type", /application\/json/);
+  });
+  after(async () => {
+    await mongoose.connection.close();
   });
 });
