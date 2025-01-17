@@ -89,8 +89,8 @@ describe("most likes", () => {
     assert.strictEqual(result.author, "Edsger W. Dijkstra");
   });
 });
-
-describe("api test", () => {
+// TODO: Add assertion to verify that we receive the correct amount of blogs in the JSON format strict equality
+describe("HTTP GET request /api/blogs", () => {
   test("HTTP GET Request /api/blogs", async () => {
     await api
       .get("/api/blogs")
