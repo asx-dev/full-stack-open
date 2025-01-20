@@ -89,13 +89,15 @@ describe("most likes", () => {
     assert.strictEqual(result.author, "Edsger W. Dijkstra");
   });
 });
-// TODO: Add assertion to verify that we receive the correct amount of blogs in the JSON format strict equality
+
 describe("HTTP GET request /api/blogs", () => {
-  test("HTTP GET Request /api/blogs", async () => {
-    await api
+  test("Return the blogs in the correct format", async () => {
+    const response = await api
       .get("/api/blogs")
       .expect(200)
       .expect("Content-Type", /application\/json/);
+
+    assert.strictEqual(response.body.length, 4);
   });
   after(async () => {
     await mongoose.connection.close();
