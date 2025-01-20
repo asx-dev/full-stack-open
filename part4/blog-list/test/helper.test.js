@@ -99,7 +99,15 @@ describe("HTTP GET request /api/blogs", () => {
 
     assert.strictEqual(response.body.length, 4);
   });
-  after(async () => {
-    await mongoose.connection.close();
+});
+
+describe("Verify property id", () => {
+  test("Id with valid format", async () => {
+    const response = await api.get("/api/blogs");
+
+    response.body.forEach((blog) => {
+      assert.ok(blog.hasOwnProperty("id"));
+      assert.ok(!blog.hasOwnProperty("_id"));
+    });
   });
 });
