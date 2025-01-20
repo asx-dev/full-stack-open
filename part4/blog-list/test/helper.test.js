@@ -111,3 +111,19 @@ describe("Verify property id", () => {
     });
   });
 });
+
+// TODO: Implement databases verification beforeEach (Reset database, verify the data is increased by 1)
+
+describe("HTTP POST request /api/blogs", () => {
+  test("Create a new blog", async () => {
+    const response = await api
+      .post("/api/blogs")
+      .send({
+        title: "Django for beginners",
+        author: "asx-dev",
+        url: "http://somerandom.com",
+        likes: 28,
+      })
+      .expect(201);
+  });
+});
