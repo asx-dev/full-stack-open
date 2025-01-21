@@ -1,10 +1,10 @@
-const { describe, test, after } = require("node:test");
+const { describe, test, beforeEach } = require("node:test");
 const assert = require("node:assert");
 const listHelper = require("../utils/list_helper");
-const mongoose = require("mongoose");
 const supertest = require("supertest");
 const app = require("../app");
 const api = supertest(app);
+const Blog = require("../models/blog");
 
 const blogs = [
   {
@@ -56,6 +56,11 @@ const blogs = [
     __v: 0,
   },
 ];
+
+beforeEach(async () => {
+  await Blog.deleteMany({});
+  const result = await Blog.insertMany(blogs);
+});
 
 test("dummy return one", () => {
   const result = listHelper.dummy(blogs);
@@ -112,8 +117,6 @@ describe("Verify property id", () => {
   });
 });
 
-// TODO: Implement databases verification beforeEach (Reset database, verify the data is increased by 1)
-
 describe("HTTP POST request /api/blogs", () => {
   test("Create a new blog", async () => {
     const response = await api
@@ -125,5 +128,8 @@ describe("HTTP POST request /api/blogs", () => {
         likes: 28,
       })
       .expect(201);
+    const blogs = await api.get("/api/blogs");
+    assert.strictEqual(blogs.body.length, 7);
+    assert.strictEqual(blogs.body[6].title, "Django for beginners");
   });
 });
