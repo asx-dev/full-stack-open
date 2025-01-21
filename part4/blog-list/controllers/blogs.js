@@ -25,4 +25,13 @@ const createBlog = async (req, res) => {
   }
 };
 
-module.exports = { getAll, createBlog };
+const deleteBlog = async (req, res) => {
+  try {
+    const blog = await Blog.findByIdAndDelete(req.params.id);
+    res.status(200).json({ message: "Blog deleted successfully" });
+  } catch (error) {
+    res.status(404).json({ message: "Blog not found" });
+  }
+};
+
+module.exports = { getAll, createBlog, deleteBlog };

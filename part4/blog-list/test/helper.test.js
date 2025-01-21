@@ -154,3 +154,5 @@ describe("Verify if the title and url are missing", () => {
     assert.strictEqual(response.status, 400);
   });
 });
+
+// TODO: Implement test that verify that a blog is deleted (We need to use ID to search the post)

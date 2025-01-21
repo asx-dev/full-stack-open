@@ -13,7 +13,6 @@ app.use(express.json());
 app.use("/api/blogs", blogRoutes);
 
 // Provisional Start Server for Supertest use
-
 const startServer = async () => {
   await dbConnect();
   app.listen(8080);
