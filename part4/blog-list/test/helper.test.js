@@ -1,4 +1,4 @@
-const { describe, test, beforeEach } = require("node:test");
+const { describe, test, beforeEach, after } = require("node:test");
 const assert = require("node:assert");
 const listHelper = require("../utils/list_helper");
 const supertest = require("supertest");
@@ -131,5 +131,16 @@ describe("HTTP POST request /api/blogs", () => {
     const blogs = await api.get("/api/blogs");
     assert.strictEqual(blogs.body.length, 7);
     assert.strictEqual(blogs.body[6].title, "Django for beginners");
+  });
+});
+
+describe("Verify if the likes property is missing", () => {
+  test("Like default value 0", async () => {
+    const response = await api.post("/api/blogs").send({
+      title: "New blog",
+      author: "new-author",
+      url: "http://newblog.com",
+    });
+    assert.strictEqual(response.body.likes, 0);
   });
 });

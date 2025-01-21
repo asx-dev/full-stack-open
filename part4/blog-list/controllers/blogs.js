@@ -11,6 +11,7 @@ const getAll = async (req, res) => {
 
 const createBlog = async (req, res) => {
   try {
+    if (!req.body.likes) req.body.likes = 0;
     const blog = new Blog(req.body);
     await blog.save();
     res.status(201).json(blog);
