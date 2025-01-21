@@ -144,3 +144,13 @@ describe("Verify if the likes property is missing", () => {
     assert.strictEqual(response.body.likes, 0);
   });
 });
+
+describe("Verify if the title and url are missing", () => {
+  test("Title and url are missing", async () => {
+    const response = await api.post("/api/blogs").send({
+      author: "author",
+      likes: 10,
+    });
+    assert.strictEqual(response.status, 400);
+  });
+});

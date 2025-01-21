@@ -12,6 +12,11 @@ const getAll = async (req, res) => {
 const createBlog = async (req, res) => {
   try {
     if (!req.body.likes) req.body.likes = 0;
+    if (!req.body.title || !req.body.url) {
+      return res.status(400).json({
+        message: "Missing required fields",
+      });
+    }
     const blog = new Blog(req.body);
     await blog.save();
     res.status(201).json(blog);
