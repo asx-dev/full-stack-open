@@ -34,4 +34,15 @@ const deleteBlog = async (req, res) => {
   }
 };
 
-module.exports = { getAll, createBlog, deleteBlog };
+const updateBlog = async (req, res) => {
+  try {
+    const updatedBlog = req.body;
+    const id = req.params.id;
+    const blog = await Blog.findByIdAndUpdate(id, updatedBlog, { new: true });
+    res.status(200).json({ message: "Blog updated successfully" });
+  } catch (error) {
+    res.status(400).json({ message: "Invalid blog data" });
+  }
+};
+
+module.exports = { getAll, createBlog, deleteBlog, updateBlog };
