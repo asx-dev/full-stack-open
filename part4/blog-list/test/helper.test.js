@@ -156,3 +156,12 @@ describe("Verify if the title and url are missing", () => {
 });
 
 // TODO: Implement test that verify that a blog is deleted (We need to use ID to search the post)
+describe("Verify that the post was deleted", () => {
+  test("Delete a blog", async () => {
+    const response = await api
+      .delete("/api/blogs/5a422a851b54a676234d17f7")
+      .expect(200);
+    const blogs = await api.get("/api/blogs");
+    assert.strictEqual(blogs.body[0].author, "Edsger W. Dijkstra");
+  });
+});
