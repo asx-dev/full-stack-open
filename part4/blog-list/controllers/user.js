@@ -4,8 +4,12 @@ const bcrypt = require("bcrypt");
 const createUser = async (req, res) => {
   try {
     const { username, name, password } = req.body;
-    if (!username || !name || !password)
-      return res.status(400).json("Missing required fields");
+    if (!username || !name || (!password && username < 3 && password < 3))
+      return res
+        .status(400)
+        .json(
+          "Error creating user, please provide all required fields. The username and password must be at least 3 characters long."
+        );
 
     const saltRounds = 10;
     const passwordHash = await bcrypt.hash(password, saltRounds);
