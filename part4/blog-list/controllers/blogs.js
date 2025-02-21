@@ -1,4 +1,5 @@
 const Blog = require("../models/blog");
+const User = require("../models/user");
 
 const getAll = async (req, res) => {
   try {
@@ -11,17 +12,32 @@ const getAll = async (req, res) => {
 
 const createBlog = async (req, res) => {
   try {
-    if (!req.body.likes) req.body.likes = 0;
-    if (!req.body.title || !req.body.url) {
+    const { title, url, author, likes = 0 } = req.body;
+    const user = await User.findById(req.body.userId);
+
+    if (!title || !url || !author) {
       return res.status(400).json({
         message: "Missing required fields",
       });
     }
-    const blog = new Blog(req.body);
-    await blog.save();
+
+    const blog = new Blog({
+      title,
+      author,
+      url,
+      likes,
+      user: user.id,
+    });
+
+    const savedBlog = await blog.save();
+    user.blogs = user.blogs.concat(savedBlog._id);
+    await user.save();
+
     res.status(201).json(blog);
   } catch (error) {
-    res.status(400).json({ message: "Invalid blog data" });
+    res
+      .status(400)
+      .json({ message: "Invalid blog data", error: error.message });
   }
 };
 
