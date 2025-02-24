@@ -52,10 +52,15 @@ const createBlog = async (req, res) => {
 
 const deleteBlog = async (req, res) => {
   try {
+    const decodedToken = jwt.verify(req.token, config.SECRET);
+    const blogUserId = await Blog.findById(req.params.id);
+    if (decodedToken.id !== blogUserId.user.toString()) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
     const blog = await Blog.findByIdAndDelete(req.params.id);
     res.status(200).json({ message: "Blog deleted successfully" });
   } catch (error) {
-    res.status(404).json({ message: "Blog not found" });
+    res.status(404).json({ message: "Error deleting blog" });
   }
 };
 
