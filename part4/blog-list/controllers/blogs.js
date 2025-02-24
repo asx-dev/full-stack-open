@@ -12,14 +12,6 @@ const getAll = async (req, res) => {
   }
 };
 
-const getToken = (req) => {
-  const authorization = req.get("authorization");
-  if (authorization && authorization.startsWith("Bearer ")) {
-    return authorization.substring(7);
-  }
-  return null;
-};
-
 const createBlog = async (req, res) => {
   try {
     const { title, url, author, likes = 0 } = req.body;
@@ -30,7 +22,7 @@ const createBlog = async (req, res) => {
       });
     }
 
-    const decodedToken = jwt.verify(getToken(req), config.SECRET);
+    const decodedToken = jwt.verify(req.token, config.SECRET);
 
     if (!decodedToken.id) {
       return res.status(401).json({ message: "Token invalid" });
