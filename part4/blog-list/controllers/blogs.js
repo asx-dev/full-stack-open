@@ -22,13 +22,11 @@ const createBlog = async (req, res) => {
       });
     }
 
-    const decodedToken = jwt.verify(req.token, config.SECRET);
-
-    if (!decodedToken.id) {
+    if (!req.user.id) {
       return res.status(401).json({ message: "Token invalid" });
     }
 
-    const user = await User.findById(decodedToken.id);
+    const user = await User.findById(req.user.id);
 
     const blog = new Blog({
       title,
@@ -52,9 +50,9 @@ const createBlog = async (req, res) => {
 
 const deleteBlog = async (req, res) => {
   try {
-    const decodedToken = jwt.verify(req.token, config.SECRET);
+    const user = req.user;
     const blogUserId = await Blog.findById(req.params.id);
-    if (decodedToken.id !== blogUserId.user.toString()) {
+    if (user.id !== blogUserId.user.toString()) {
       return res.status(401).json({ message: "Unauthorized" });
     }
     const blog = await Blog.findByIdAndDelete(req.params.id);
