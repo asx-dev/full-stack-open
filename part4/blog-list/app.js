@@ -19,10 +19,10 @@ app.use("/api/blogs", blogRoutes);
 app.use("/api/users", userRoutes);
 
 // Provisional Start Server for Supertest use
-// const startServer = async () => {
-//   await dbConnect();
-//   app.listen(8080);
-// };
-// startServer();
+const startServer = async () => {
+  await dbConnect();
+  app.listen(8080);
+};
+startServer();
 
 module.exports = app;

@@ -102,7 +102,7 @@ describe("HTTP GET request /api/blogs", () => {
       .expect(200)
       .expect("Content-Type", /application\/json/);
 
-    assert.strictEqual(response.body.length, 4);
+    assert.strictEqual(response.body.length, 6);
   });
 });
 
@@ -117,10 +117,18 @@ describe("Verify property id", () => {
   });
 });
 
-describe("HTTP POST request /api/blogs", () => {
+describe("HTTP POST request /api/blogs with token", () => {
   test("Create a new blog", async () => {
+    const login = await api.post("/api/users/login").send({
+      username: "asx",
+      password: "ipod1234",
+    });
+
+    const token = login._body.token;
+
     const response = await api
       .post("/api/blogs")
+      .set({ Authorization: `Bearer ${token}` })
       .send({
         title: "Django for beginners",
         author: "asx-dev",
@@ -131,6 +139,20 @@ describe("HTTP POST request /api/blogs", () => {
     const blogs = await api.get("/api/blogs");
     assert.strictEqual(blogs.body.length, 7);
     assert.strictEqual(blogs.body[6].title, "Django for beginners");
+  });
+});
+
+describe("HTTP POST request /api/blogs with invalid token", () => {
+  test("Fail creating blog with invalid token", async () => {
+    const response = await api
+      .post("/api/blogs")
+      .send({
+        title: "This post should not be created",
+        author: "asx-dev",
+        url: "http://somerandom.com",
+        likes: 28,
+      })
+      .expect(401);
   });
 });
 

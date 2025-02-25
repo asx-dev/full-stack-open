@@ -1,7 +1,5 @@
 const Blog = require("../models/blog");
 const User = require("../models/user");
-const jwt = require("jsonwebtoken");
-const config = require("../utils/config");
 
 const getAll = async (req, res) => {
   try {
@@ -42,9 +40,7 @@ const createBlog = async (req, res) => {
 
     res.status(201).json(blog);
   } catch (error) {
-    res
-      .status(400)
-      .json({ message: "Invalid blog data", error: error.message });
+    res.status(401).json({ message: "Unauthorized", error: error.message });
   }
 };
 
