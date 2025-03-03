@@ -35,6 +35,7 @@ const getAllUsers = async (req, res) => {
 };
 
 const login = async (req, res) => {
+  console.log(req.body);
   try {
     const { username, password } = req.body;
     const user = await User.findOne({ username });
